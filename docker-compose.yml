@@ -1,0 +1,41 @@
+version: "3.1"
+services:
+  yourls:
+    user: 0:0
+    image: yourls:${SOFTWARE_VERSION_TAG}
+    restart: always
+    ports:
+      - 172.17.0.1:17851:80
+    environment:
+      YOURLS_DB_PASS: ${ADMIN_PASSWORD}
+      YOURLS_SITE: ${YOURLS_SITE}
+      YOURLS_USER: root
+      YOURLS_PASS: ${YOURLS_PASS}
+    volumes:
+      - ./yourls:/var/www/html/
+  mysql:
+    image: elestio/mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${YOURLS_PASS}
+      MYSQL_DATABASE: yourls
+    volumes:
+      - ./data:/var/lib/mysql
+
+  pma:
+    image: elestio/phpmyadmin
+    restart: always
+    links:
+      - mysql:mysql
+    ports:
+      - "172.17.0.1:43503:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${ADMIN_PASSWORD}
+      UPLOAD_LIMIT: 500M
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      - mysql
