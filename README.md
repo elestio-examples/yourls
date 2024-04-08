@@ -16,9 +16,7 @@ You can open Yourls ADMIN UI here:
     login: "root"
     password: [ADMIN_PASSWORD]
 
-# Once deployed ...
-
-You can open Yourls ADMIN UI here:
+You can open phpMyAdmin here:
 
     URL: https://[CI_CD_DOMAIN]:46454
     login: "root"
